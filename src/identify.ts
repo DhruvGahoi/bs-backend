@@ -11,15 +11,6 @@ interface Contact {
     deleted_at: Date | null;
 }
 
-interface IdentifyResult {
-    contact: {
-        primaryContactId: number;
-        emails: string[];
-        phoneNumbers: string[];
-        secondaryContactId: number[];
-    }
-}
-
 export async function identify(
     email: string | null,
     phoneNumber: string | null,
@@ -67,7 +58,7 @@ export async function identify(
     );
 
     const primaries = allContacts.filter(c => c.link_precedence === "primary");
-    // oldest primary wins, losers get demoted, and all their children get re-adopted by the winner.
+    // oldest primary wins, losers get demoted, and all their children get adopted by the winner.
     if(primaries.length > 1){
         primaries.sort((a, b) => a.created_at.getTime() - b.created_at.getTime());
         const oldest = primaries[0];
