@@ -1,5 +1,5 @@
 import express from "express";
-import { pool } from "./db";
+import { pool } from "./database/db";
 import { router } from "./route";
 
 const PORT = process.env.PORT || 3000;

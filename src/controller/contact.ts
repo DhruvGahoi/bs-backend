@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { z } from "zod";
-import { pool } from "../db";
+import { pool } from "../database/db";
 import { identify } from "../identify";
 
 const schema = z.object({
