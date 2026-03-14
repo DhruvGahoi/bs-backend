@@ -11,11 +11,20 @@ interface Contact {
     deleted_at: Date | null;
 }
 
+interface IdentifyResult {
+    contact: {
+        primaryContactId: number,
+        emails: string[];
+        phoneNumbers: string[];
+        secondaryContactIds: number[];
+    }
+} 
+
 export async function identify(
     email: string | null,
     phoneNumber: string | null,
     client: PoolClient
-) {
+): Promise<IdentifyResult> {
     // Check the matches, like if it matches the email or phone_number
     const {rows: matches} = await client.query<Contact>(
         `SELECT * FROM contact WHERE (email = $1 OR phone_number = $2) AND deleted_at is NULL`,
@@ -35,7 +44,7 @@ export async function identify(
             primaryContactId: newContact.id,
             emails: newContact.email ? [newContact.email] : [],
             phoneNumbers: newContact.phone_number ? [newContact.phone_number] : [],
-            secondaryContactId: []
+            secondaryContactIds: []
             }
         };
     }
@@ -119,7 +128,7 @@ export async function identify(
             phoneNumbers: [
                 ...new Set(finalCluster.map(c => c.phone_number).filter(Boolean) as string[])
             ],
-            secondaryContactId: secondaries.map(c => c.id)
+            secondaryContactIds: secondaries.map(c => c.id)
         }
     };
     
