@@ -1,10 +1,12 @@
 import express from "express";
 import { pool } from "./db";
+import { router } from "./route";
 
 const PORT = process.env.PORT || 3000;
 
 const app = express();
 app.use(express.json());
+app.use(router);
 
 app.get("/", async (_req, res) => {
   try {
