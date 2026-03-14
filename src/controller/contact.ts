@@ -17,12 +17,13 @@ export async function identifyContact(req: Request, res: Response) {
     return;
   }
 
-  const { email, phoneNumber } = result.data;
+  const email = result.data.email ?? null;
+  const phoneNumber = result.data.phoneNumber ?? null;
   const client = await pool.connect();
 
   try {
     await client.query("BEGIN");
-    const data = await identify(email ?? null, phoneNumber ?? null, client);
+    const data = await identify(email, phoneNumber, client);
     await client.query("COMMIT");
     res.json(data);
   } catch (err) {
